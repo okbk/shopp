@@ -13,36 +13,11 @@
 // Reduce image display issues by hiding warnings/notices
 ini_set('display_errors', 0);
 
-if ( ! defined('SHORTINIT') ) define('SHORTINIT',true);
 define('SHOPP_IMGSERVER_LOADED', true);
-
-$path = ImageServer::path();
 
 // Create a "stub" global Shopp object for use by Asset objects (as the $Shopp
 // global will not otherwise be present for them to populate)
 if ( ! isset($GLOBALS['Shopp']) ) $GLOBALS['Shopp'] = new stdClass;
-
-// Make core Shopp functionality available
-if ( ! defined('WPINC') ) define('WPINC', 'wp-includes'); // Stop 403s from unauthorized direct access
-
-// Core functions and lazy loader
-if ( ! class_exists('ShoppLoader') )
-	require "$path/core/library/Loader.php";
-
-// Barebones bootstrap (say that 5x fast) for WordPress
-if ( ! defined('ABSPATH') && $loadfile = ShoppLoader::find_wpload()) {
-	require($loadfile);
-	global $table_prefix;
-}
-
-
-// Stub i18n for compatibility
-if ( ! function_exists('__')) {
-	// Localization API is not available at this point
-	function __ ($string,$domain=false) {
-		return $string;
-	}
-}
 
 ShoppDeveloperAPI::load( dirname(ShoppLoader::basepath()), array('core','settings') );
 
@@ -346,5 +321,4 @@ class ImageServer {
 	public static function path () {
 		return str_replace('\\', '/', realpath( dirname(dirname(__FILE__)) ) );
 	}
-
 }

@@ -340,10 +340,6 @@ final class Shopp extends ShoppCore {
  				=> 'index.php?src=download&shopp_download=$matches[1]',
  		);
 
- 		// Image URL rewrite
- 		$images = array( ShoppPages()->baseslug(), 'images', '(\d+)', "?\??(.*)$" );
- 		add_rewrite_rule(join('/', $images), $path . '/image.php?siid=$1&$2');
-
  		return $rules + (array) $wp_rewrite_rules;
  	}
 
@@ -381,9 +377,14 @@ final class Shopp extends ShoppCore {
 		if ( WP_DEBUG ) define('SHOPP_MEMORY_PROFILE_BEFORE', memory_get_peak_usage(true) );
 
 		$services = dirname(ShoppLoader()->basepath()) . '/services';
-
+		
+		$ShoppSettings = ShoppSettings::object();
+		$storefront_pages = $ShoppSettings->get('storefront_pages');
+		
+		$baseslug = isset($storefront_pages['catalog']['slug']) ? $storefront_pages['catalog']['slug'] : '.+?';
+		
 		// Image Server request handling
-		if ( isset($_GET['siid']) || 1 == preg_match('{^/.+?/images/\d+/.*$}', $_SERVER['REQUEST_URI']) )
+		if ( isset($_GET['siid']) || 1 == preg_match('{^/' . $baseslug . '/images/\d+/.*$}', $_SERVER['REQUEST_URI']) )
 			return require "$services/image.php";
 
 		// Script Server request handling

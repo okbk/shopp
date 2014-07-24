@@ -49,19 +49,6 @@ function get_file( $path ) {
 	return @file_get_contents($path);
 }
 
-if ( ! defined('SHORTINIT') ) {
-	define('SHORTINIT',true);
-
-	require dirname(dirname(__FILE__)) . '/core/library/Loader.php';
-
-	if ( ! defined('ABSPATH') && $loadfile = ShoppLoader::find_wpload() )
-		define('ABSPATH', dirname($loadfile) . '/');
-
-	if ( ! defined('WPINC') ) define('WPINC', 'wp-includes');
-
-	date_default_timezone_set('UTC');
-}
-
 $ShoppScripts = new ShoppScripts();
 shopp_default_scripts($ShoppScripts);
 
