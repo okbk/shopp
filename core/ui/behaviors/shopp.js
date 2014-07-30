@@ -203,7 +203,7 @@ if (!Number.prototype.roundFixed) {
 function quickSelects (e) {
 	var target = jQuery(e).find('input.selectall');
 	if (target.size() == 0) target = jQuery('input.selectall');
-	target.unbind('mouseup.select').bind('mouseup.select',function () { this.select(); });
+	target.selectall();
 }
 
 /**
@@ -215,6 +215,12 @@ function htmlentities (string) {
 		return String.fromCharCode(RegExp.$1);
 	});
 	return string;
+}
+
+jQuery.fn.selectall = function () {
+	var event = 'mouseup.select';
+	jQuery(this).off(event).on(event, function () { this.select(); });
+	return this;
 }
 
 jQuery.fn.fadeRemove = function (duration,callback) {
@@ -257,6 +263,7 @@ jQuery.fn.money = function () {
 	}).change();
 	return this;
 }
+
 
 /**
  * Parse JSON data with native browser parsing or
