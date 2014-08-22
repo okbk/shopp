@@ -219,19 +219,22 @@ abstract class SessionObject {
 
 		// Save standard session data for compatibility
 		if ( ! empty($session) ) {
-			$sessionid = self::PHP_SESSION . $id;
-			$exists = get_option($sessionid);
 
 			$expiresid = self::PHP_EXPIRES . $id;
 			$lifetime = time() + (int) ini_get('session.gc_maxlifetime');
 			$expires = get_option($expiresid);
-			if ( false == $expiresid )
+
+			if ( false === $expires )
 				add_option($expiresid, $lifetime, '', 'no' );
 			else update_option($expiresid, $lifetime);
 
+			$sessionid = self::PHP_SESSION . $id;
+			$exists = get_option($sessionid);
+
 			if ( false === $exists ) // Add new global session data, do not autoload
 				return add_option($sessionid, $session, '', 'no');
-			return update_option($sessionid, $session);
+			else return update_option($sessionid, $session);
+
 		}
 
 		return true;
@@ -264,8 +267,8 @@ abstract class SessionObject {
 		$session = self::PHP_SESSION;
 		$expires = self::PHP_EXPIRES;
 
-		sDB::query("DELETE FROM $wpdb->options AS t1 JOIN {$wpdb->options} AS t2 ON t2.option_name = replace(t1.option_name, '_expires', '')
-				WHERE (t1.option_name LIKE '$session%' OR t1.option_name LIKE '$expires%') AND t1.option_value < '$time'");
+		sDB::query("DELETE t1,t2 FROM $wpdb->options AS t1 JOIN {$wpdb->options} AS t2 ON t2.option_name = replace(t1.option_name, '_expires', '')
+				WHERE t1.option_name LIKE '$expires%' AND t1.option_value < " . (int)$time);
 
 		return true;
 	}
