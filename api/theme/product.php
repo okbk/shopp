@@ -355,7 +355,7 @@ class ShoppProductThemeAPI implements ShoppAPI {
 		extract($options);
 
 		$classes = array();
-		if (!empty($class)) $classes = explode(' ',$class);
+		if ( ! empty($class) ) $classes = explode(' ',$class);
 
 		$string = "";
 		if ( shopp_setting_enabled('inventory') && $O->outofstock )

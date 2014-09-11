@@ -124,4 +124,3 @@ function shopp_admin_screen_tabs () {
 	$pagehook = sanitize_key($plugin_page);
 	echo '<h2 class="nav-tab-wrapper">' . join('', apply_filters('shopp_admin_' . $pagehook . '_screen_tabs', $markup)) . '</h2>';
 }
-
